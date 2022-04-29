@@ -3,7 +3,7 @@ WORKDIR /root/dist/
 ADD http://ftp.gnu.org/gnu/binutils/binutils-2.27.tar.gz /root/dist/
 ADD http://ftp.gnu.org/gnu/gcc/gcc-4.9.4/gcc-4.9.4.tar.gz /root/dist/
 ADD http://ftp.gnu.org/gnu/gdb/gdb-7.12.tar.xz /root/dist/
-RUN yum install -y wget bzip2 make gcc
+RUN yum install -y wget bzip2 make gcc gcc-c++
 RUN cd /root/dist && tar xzf gcc-4.9.4.tar.gz && chmod u+x gcc-4.9.4/contrib/download_prerequisites
 RUN cd /root/dist/gcc-4.9.4 && ./contrib/download_prerequisites
 RUN cd /root/dist && tar xzf binutils-2.27.tar.gz && cd binutils-2.27 && ./configure && make && make install
