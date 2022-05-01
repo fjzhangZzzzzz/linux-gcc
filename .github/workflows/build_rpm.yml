@@ -11,7 +11,9 @@ on:
         description: 'Package to build rpm, one of binutils,gcc,gdb'
         default: 'binutils'
         required: true
-
+env:
+  TAG_NAME: ''
+  
 jobs:
   build_and_publish:
     runs-on: ubuntu-latest
@@ -25,6 +27,7 @@ jobs:
         docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         docker run --rm -v$(pwd):/root/build_rpm ${{ github.event.inputs.arch }}/centos:7 bash /root/build_rpm/build_rpm.sh ${{ github.event.inputs.item }}
         tar -zcvf ${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}-rpm.tar.gz RPMS/
+        TAG_NAME=${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}-$(date "+%y%m%d")
     
     - name: Create Release
       id: create_release
@@ -32,7 +35,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}-$(date "+%y%m%d")
+        tag_name: ${{ env.TAG_NAME }}
         release_name: Release ${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}
         draft: false
         prerelease: false
