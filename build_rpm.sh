@@ -24,6 +24,6 @@ fi
 
 rpmbuild -ba ~/rpmbuild/SPECS/$1.spec
 
-mkdir -p $WORK_DIR/RPMS && rm -rf $WORK_DIR/RPMS/*
+[ ! -d $WORK_DIR/RPMS ] && mkdir -p $WORK_DIR/RPMS || true
 
-cp -rf ~/rpmbuild/RPMS/$(uname -m)/* $WORK_DIR/RPMS/
+cp -rf ~/rpmbuild/RPMS/* $WORK_DIR/RPMS/
