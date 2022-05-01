@@ -13,7 +13,7 @@ on:
         required: true
 
 jobs:
-  build:
+  build_and_publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +25,9 @@ jobs:
         docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         docker run --rm -v$(pwd):/root/build_rpm ${{ github.event.inputs.arch }}/centos:7 bash /root/build_rpm/build_rpm.sh ${{ github.event.inputs.item }}
         
-    - name: Upload rpm
-      uses: actions/upload-artifact@v3.0.0
+    - name: Upload the artifacts
+      uses: skx/github-action-publish-binaries@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        path: RPMS/*.rpm
+        args: 'RPMS/*.rpm'
