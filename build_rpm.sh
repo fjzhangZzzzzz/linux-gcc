@@ -2,13 +2,13 @@
 
 set -xe
 
-WORK_DIR=~
+WORK_DIR=/root/build_rpm
 
 yum -y install rpm-build rpm-devel rpmdevtools wget bzip2 texinfo file make gcc gcc-c++
 
 [ ! -d ~/rpmbuild ] && rpmdev-setuptree || true
 
-cp $1.spec ~/rpmbuild/SPECS 
+cp $WORK_DIR/$1.spec ~/rpmbuild/SPECS 
 
 cd ~/rpmbuild/SOURCES
 if [ "$1" == "binutils" ]; then
