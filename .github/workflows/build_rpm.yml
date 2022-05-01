@@ -30,4 +30,5 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
+        releaseId: ${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}-latest
         args: 'RPMS/*.rpm'
