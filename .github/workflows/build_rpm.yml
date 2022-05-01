@@ -11,11 +11,9 @@ on:
         description: 'Package to build rpm, one of binutils,gcc,gdb'
         default: 'binutils'
         required: true
-env:
-  TAG_NAME: ''
   
 jobs:
-  build_and_publish:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,26 +24,9 @@ jobs:
       run: |
         docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         docker run --rm -v$(pwd):/root/build_rpm ${{ github.event.inputs.arch }}/centos:7 bash /root/build_rpm/build_rpm.sh ${{ github.event.inputs.item }}
-        tar -zcvf ${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}-rpm.tar.gz RPMS/
-        TAG_NAME=${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}-$(date "+%y%m%d%H%M%S")
     
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Commit & Push changes
+      uses: actions-js/push@master
       with:
-        tag_name: ${{ env.TAG_NAME }}
-        release_name: Release ${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}
-        draft: false
-        prerelease: false
-
-    - name: Upload Release Asset
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: ./${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}-rpm.tar.gz
-        asset_name: ${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}-rpm.tar.gz
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        message: "upload rpm package"
