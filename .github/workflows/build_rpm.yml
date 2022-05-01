@@ -1,0 +1,31 @@
+name: Build RPM pakcage
+
+on:
+  workflow_dispatch:
+    inputs:
+      arch:
+        description: 'Architecture to build rpm, one of amd64,arm64v8,ppc64le'
+        default: 'amd64'
+        required: true
+      item:
+        description: 'Package to build rpm, one of binutils,gcc,gdb'
+        default: 'binutils'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the repo
+      uses: actions/checkout@v3
+
+    # Runs a single command using the runners shell
+    - name: Build rpm
+      run: |
+        docker run --rm -v$(pwd):/root/build_rpm ${{ github.event.inputs.arch }}/centos:7 bash /root/build_rpm/build_rpm.sh ${{ github.event.inputs.item }}
+        
+    - name: Upload rpm
+      uses: actions/upload-artifact@v3.0.0
+      with:
+        path: RPMS/*.rpm
