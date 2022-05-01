@@ -32,8 +32,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}
-        release_name: Release ${{ github.event.inputs.item }}-${{ github.event.inputs.arch }} ${{ github.ref }}
+        tag_name: ${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}-$(date "+%y%m%d")
+        release_name: Release ${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}
         draft: false
         prerelease: false
 
