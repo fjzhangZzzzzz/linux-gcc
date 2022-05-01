@@ -2,6 +2,8 @@
 
 set -xe
 
+WORK_DIR=~
+
 yum -y install rpm-build rpm-devel rpmdevtools wget bzip2 texinfo file make gcc gcc-c++
 
 [ ! -d ~/rpmbuild ] && rpmdev-setuptree || true
@@ -21,3 +23,7 @@ else
 fi
 
 rpmbuild -ba ~/rpmbuild/SPECS/$1.spec
+
+mkdir -p $WORK_DIR/RPMS && rm -rf $WORK_DIR/RPMS/*
+
+cp -rf ~/rpmbuild/RPMS/$(uname -m)/* $WORK_DIR/RPMS/
