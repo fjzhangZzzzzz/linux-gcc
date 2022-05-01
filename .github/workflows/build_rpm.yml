@@ -27,7 +27,7 @@ jobs:
         docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         docker run --rm -v$(pwd):/root/build_rpm ${{ github.event.inputs.arch }}/centos:7 bash /root/build_rpm/build_rpm.sh ${{ github.event.inputs.item }}
         tar -zcvf ${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}-rpm.tar.gz RPMS/
-        TAG_NAME=${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}-$(date "+%y%m%d")
+        TAG_NAME=${{ github.event.inputs.item }}-${{ github.event.inputs.arch }}-$(date "+%y%m%d%H%M%S")
     
     - name: Create Release
       id: create_release
